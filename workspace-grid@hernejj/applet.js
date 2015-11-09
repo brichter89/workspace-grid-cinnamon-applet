@@ -79,6 +79,9 @@ MyApplet.prototype = {
             this.settings.bindProperty(Settings.BindingDirection.IN, "style", "style", this.onUpdateStyle, null);
             this.settings.bindProperty(Settings.BindingDirection.IN, "registerUpDownKeyBindings", "registerUpDownKeyBindings", this.onKeyBindingChanged, null);
             this.settings.bindProperty(Settings.BindingDirection.IN, "scrollWheelBehavior", "scrollWheelBehavior", this.onUpdateScrollWheelBehavior, null);
+            this.settings.bindProperty(Settings.BindingDirection.IN, "displayLabels", "displayLabels", this.onUpdateStyle, null);
+            this.settings.bindProperty(Settings.BindingDirection.IN, "forceFontSize", "forceFontSize", this.onUpdateStyle, null);
+            this.settings.bindProperty(Settings.BindingDirection.IN, "fontSize", "fontSize", this.onUpdateStyle, null);
             
             this.wscon = new WorkspaceController.WorkspaceController(this.numCols, this.numRows);
             this.onUpdateStyle();
@@ -112,9 +115,9 @@ MyApplet.prototype = {
     onUpdateStyle: function() {
         if (this.ui) this.ui.cleanup();
         if (this.style == 'single-row')
-            this.ui = new BarIndicatorStyle.BarIndicatorStyle(this, this.numCols, this.numRows, this._panelHeight);
+            this.ui = new BarIndicatorStyle.BarIndicatorStyle(this, this.numCols, this.numRows, this._panelHeight, this.displayLabels, this.forceFontSize, this.fontSize);
         else
-            this.ui = new GridStyle.GridStyle(this, this.numCols, this.numRows, this._panelHeight);
+            this.ui = new GridStyle.GridStyle(this, this.numCols, this.numRows, this._panelHeight, this.displayLabels, this.forceFontSize, this.fontSize);
         this.onUpdateScrollWheelBehavior();
     },
     

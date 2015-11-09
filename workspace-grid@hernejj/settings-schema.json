@@ -1,45 +1,79 @@
 {
- "numCols" : {
-    "type": "spinbutton",
-    "default" : 2,
-    "min" : 1,
-    "max" : 12,
-    "step" : 1,
-    "units" : "desktops",
-    "description" : "Number of columns:"
- },
- "numRows" : {
-    "type": "spinbutton",
-    "default" : 1,
-    "min" : 1,
-    "max" : 6,
-    "step" : 1,
-    "units" : "desktops",
-    "description" : "Number of rows:"
- },
- "style": {
-    "type": "combobox",
-    "description": "Style:",
-    "default": "single-row",
-    "options": {
-        "Single Row": "single-row",
-        "Grid": "grid"
+    "[General header]": { "type": "header", "description": "General" },
+    "[General separator]": { "type": "separator" },
+    "numCols": {
+        "type": "spinbutton",
+        "default": 2,
+        "min": 1,
+        "max": 12,
+        "step": 1,
+        "units": "desktops",
+        "description": "Number of columns:"
+    },
+    "numRows": {
+        "type": "spinbutton",
+        "default": 1,
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "units": "desktops",
+        "description": "Number of rows:",
+        "dependency": "show-launch-player"
+    },
+
+
+    "[Behavior spacer]": { "type": "header", "description": "" },
+    "[Behavior header]": { "type": "header", "description": "Behavior" },
+    "[Behavior separator]": { "type": "separator" },
+    "registerUpDownKeyBindings": {
+        "type": "checkbox",
+        "default": true,
+        "description": "Use keyboard shortcuts (Ctrl+Alt+Up/Down) to switch desktop rows\nAttention: This prevents the use of the Expo and Scale keyboard shortcuts in Cinnamon!"
+    },
+    "scrollWheelBehavior": {
+        "type": "combobox",
+        "description": "Scroll wheel behavior:",
+        "default": "col",
+        "options": {
+            "Scroll By Column": "col",
+            "Scroll By Row": "row"
+        }
+    },
+
+
+    "[Appearance spacer]": { "type": "header", "description": "" },
+    "[Appearance header]": { "type": "header", "description": "Appearance" },
+    "[Appearance separator]": { "type": "separator" },
+    "displayLabels": {
+        "type": "checkbox",
+        "default": true,
+        "description": "Display labels"
+    },
+    "forceFontSize": {
+        "type": "checkbox",
+        "default": false,
+        "description": "Force font size",
+        "indent": true
+    },
+    "fontSize": {
+        "type": "spinbutton",
+        "default": 8,
+        "min": 1,
+        "max": 120,
+        "step": 1,
+        "units": "pt",
+        "description": "Font size:",
+        "dependency": "forceFontSize",
+        "indent": true
+    },
+    "style": {
+        "type": "combobox",
+        "description": "Style:",
+        "default": "single-row",
+        "options": {
+            "Single Row": "single-row",
+            "Grid": "grid"
+        }
     }
-},
- "registerUpDownKeyBindings" : {
-    "type" : "checkbox",
-    "default" : true,
-    "description": "Use Keyboard shortcuts (Ctrl+Alt+Up/Down) to switch desktop rows",
-    "tooltip": "This prevents the use of the Expo and Scale keyboard shortcuts in Cinnamon"
- },
- "scrollWheelBehavior": {
-    "type": "combobox",
-    "description": "Scroll Wheel Behavior:",
-    "default": "col",
-    "options": {
-        "Scroll By Column": "col",
-        "Scroll By Row": "row"
-    }
-  }
 }
 

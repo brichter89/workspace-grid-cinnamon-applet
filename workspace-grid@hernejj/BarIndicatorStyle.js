@@ -2,24 +2,27 @@ const Lang = imports.lang;
 const St = imports.gi.St;
 const Clutter = imports.gi.Clutter;
 
-function BarIndicatorStyle(applet, cols, rows, height) {
-    this._init(applet, cols, rows, height);
+function BarIndicatorStyle(applet, cols, rows, height, displayLabels, forceFontSize, fontSize) {
+    this._init(applet, cols, rows, height, displayLabels, forceFontSize, fontSize);
 }
 
 BarIndicatorStyle.prototype = {
     
-    _init: function(applet, cols, rows, height) {
+    _init: function(applet, cols, rows, height, displayLabels, forceFontSize, fontSize) {
         this.applet = applet;
         this.button = [];
-        this.update_grid(cols, rows, height);
+        this.update_grid(cols, rows, height, displayLabels, forceFontSize, fontSize);
         this.switch_id = global.window_manager.connect('switch-workspace', Lang.bind(this, this.update));
         this.scroll_id = this.applet.actor.connect('scroll-event', Lang.bind(this,this.onMouseScroll));
     },
     
-    update_grid: function(cols, rows, height) {
+    update_grid: function(cols, rows, height, displayLabels, forceFontSize, fontSize) {
         this.cols = cols;
         this.rows = rows;
         this.height = height;
+        this.displayLabels = displayLabels;
+        this.forceFontSize = forceFontSize;
+        this.fontSize = fontSize;
         this.rebuild();
     },
     
@@ -118,11 +121,19 @@ BarIndicatorStyle.prototype = {
         this.button = [];
         for ( let i=0; i<global.screen.n_workspaces; ++i ) {
             this.button[i] = new St.Button({ name: 'workspaceButton', style_class: 'workspace-button', reactive: true });
-            
-            let text = (i+1).toString();
+
+            let text = (this.displayLabels 
+                ? (i+1).toString()
+                : ''
+            );
+
             let label = new St.Label({ text: text });
             label.set_style("font-weight: bold");
+            if (this.forceFontSize) {
+                label.set_style("font-size: " +  this.fontSize + "pt");
+            }
             this.button[i].set_child(label);
+
             this.applet.actor.add(this.button[i]);
             this.button[i].index = i;
             this.button[i].set_height(this.height);
@@ -150,13 +161,11 @@ BarIndicatorStyle.prototype = {
         for (let i=0; i < nworks; ++i) {
             if (i >= low && i < high) this.button[i].show();
             else this.button[i].hide();
-                
+
             if (i == active_ws) {
-                this.button[i].get_child().set_text((i+1).toString());
                 this.button[i].add_style_pseudo_class('outlined');
             }
             else {
-                this.button[i].get_child().set_text((i+1).toString());
                 this.button[i].remove_style_pseudo_class('outlined');
             }
         }

@@ -2,17 +2,17 @@ const Lang = imports.lang;
 const St = imports.gi.St;
 const Clutter = imports.gi.Clutter;
 
-function GridStyle(applet, cols, rows, height) {
-    this._init(applet, cols, rows, height);
+function GridStyle(applet, cols, rows, height, displayLabels, forceFontSize, fontSize) {
+    this._init(applet, cols, rows, height, displayLabels, forceFontSize, fontSize);
 }
 
 GridStyle.prototype = {
     
-    _init: function(applet, cols, rows, height) {
+    _init: function(applet, cols, rows, height, displayLabels, forceFontSize, fontSize) {
         this.scrollby = 'col';
         this.applet = applet;
         this.button = [];
-        this.update_grid(cols, rows, height);
+        this.update_grid(cols, rows, height, displayLabels, forceFontSize, fontSize);
         this.event_handlers = [];
         this.switch_id = global.window_manager.connect('switch-workspace', Lang.bind(this, this.update));
         this.scroll_id = this.applet.actor.connect('scroll-event', Lang.bind(this,this.onMouseScroll));
@@ -23,10 +23,13 @@ GridStyle.prototype = {
         this.applet.actor.disconnect(this.scroll_id);
     },
     
-    update_grid: function(cols, rows, height) {
+    update_grid: function(cols, rows, height, displayLabels, forceFontSize, fontSize) {
         this.cols = cols;
         this.rows = rows;
         this.height = height;
+	this.displayLabels = displayLabels;
+        this.forceFontSize = forceFontSize;
+        this.fontSize = fontSize;
         this.rebuild();
     },
     
@@ -100,9 +103,23 @@ GridStyle.prototype = {
                 let i = (r*this.cols)+c;
                 
                 this.button[i] = new St.Button({ name: 'workspaceButton', style_class: 'workspace-button', reactive: true });
+
+                let text = (this.displayLabels 
+                    ? (i+1).toString()
+                    : ''
+                );
+                
+                let label = new St.Label({ text: text });
+                label.set_style("font-weight: bold");
+                if (this.forceFontSize) {
+                    label.set_style("font-size: " +  this.fontSize + "pt");
+                }
+                this.button[i].set_child(label);
+
                 this.button[i].index = i;
                 this.button[i].set_height(btn_height);
                 this.button[i].set_width(btn_height*1.25);
+                this.button[i].set_style("padding: 0px");
                 this.button[i].connect('button-release-event', Lang.bind(this, this.onWorkspaceButtonClicked));
                 this.table.add(this.button[i], {row: r, col: c});
             }
